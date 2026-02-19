@@ -1,0 +1,16 @@
+번호,품목,규격,수량,단위,단가(원),소계(원),구매처,비고
+1,BLDC Motor,KV TBD / 직경 TBD,12,EA,TBD,TBD,AliExpress,
+2,자기 엔코더,AS5047P SPI 14bit,12,EA,5000,60000,AliExpress/LCSC,
+3,ESP32 개발보드,ESP32-DevKitC-32E,12,EA,5000,60000,AliExpress,
+4,모터 드라이버 IC,DRV8302 or STSPIN32,12,EA,TBD,TBD,LCSC,
+5,치형 벨트,HTD 3M / 길이 TBD,12,SET,TBD,TBD,국내 규격부품사,
+6,풀리,HTD 3M / 감속비 6~9:1,24,EA,TBD,TBD,,입력+출력 각 1개
+7,알루미늄 프로파일,20x20 / 각 길이 TBD,1,SET,TBD,TBD,,프레임
+8,3D 프린팅 부품,PLA or PETG,1,SET,TBD,TBD,,브라켓/하우징
+9,Raspberry Pi 5,4GB or 8GB,1,EA,100000,100000,공식 대리점,
+10,LiPo 배터리,6S 5000mAh,1,EA,50000,50000,,전압 TBD
+11,전원 분배 보드,XT60 / 퓨즈 포함,1,EA,10000,10000,,
+12,IMU,MPU-6050 or ICM-42688,1,EA,5000,5000,,
+13,배선/커넥터,JST-PH 2.0 등,1,SET,20000,20000,,
+14,기타 소모품,나사/스페이서/열수축,1,SET,20000,20000,,
+합계,,,,,,,,,345000+
