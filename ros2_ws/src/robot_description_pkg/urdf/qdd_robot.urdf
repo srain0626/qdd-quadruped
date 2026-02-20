@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<!--
+  QDD 사족보행 로봇 URDF
+  - 4다리 × 3DOF (HAA / HFE / KFE) = 12 관절
+  - 링크 길이: thigh=0.12 m, shin=0.12 m
+  - 다리 부착 위치 (몸체 중심 기준):
+      FL: (+0.15, +0.07, 0)   FR: (+0.15, -0.07, 0)
+      RL: (-0.15, +0.07, 0)   RR: (-0.15, -0.07, 0)
+-->
+<robot name="qdd_quadruped">
+
+  <!-- ══ Body ══════════════════════════════════════════════ -->
+  <link name="base_link">
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="0.02" ixy="0" ixz="0"
+               iyy="0.04" iyz="0" izz="0.04"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.30 0.14 0.06"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.30 0.14 0.06"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ══ Macro: 다리 1개 생성 ═══════════════════════════════
+       prefix : FL / FR / RL / RR
+       side   : 1 (left) / -1 (right)  — HAA 방향
+       bx, by : base_link 기준 hip 부착 위치 (m)
+  ════════════════════════════════════════════════════════ -->
+
+  <!-- ── Front-Left (FL) ──────────────────────────────── -->
+  <link name="FL_hip_link">
+    <inertial><mass value="0.25"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/></inertial>
+    <visual><geometry><cylinder radius="0.02" length="0.04"/></geometry><material name="dark"><color rgba="0.2 0.2 0.2 1"/></material></visual>
+  </link>
+  <joint name="FL_HAA" type="revolute">
+    <parent link="base_link"/>
+    <child  link="FL_hip_link"/>
+    <origin xyz="0.15 0.07 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FL_thigh_link">
+    <inertial><mass value="0.3"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="3e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.03 0.03 0.12"/></geometry><material name="blue"><color rgba="0.1 0.4 0.8 1"/></material></visual>
+  </link>
+  <joint name="FL_HFE" type="revolute">
+    <parent link="FL_hip_link"/>
+    <child  link="FL_thigh_link"/>
+    <origin xyz="0 0.04 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.6" upper="1.6" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FL_shin_link">
+    <inertial><mass value="0.15"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="2e-4" iyz="0" izz="2e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.02 0.02 0.12"/></geometry><material name="blue2"><color rgba="0.0 0.3 0.7 1"/></material></visual>
+  </link>
+  <joint name="FL_KFE" type="revolute">
+    <parent link="FL_thigh_link"/>
+    <child  link="FL_shin_link"/>
+    <origin xyz="0 0 -0.12" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.6" upper="0.0" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FL_foot_link">
+    <inertial><mass value="0.02"/><inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/></inertial>
+    <visual><geometry><sphere radius="0.015"/></geometry><material name="black"><color rgba="0 0 0 1"/></material></visual>
+    <collision><geometry><sphere radius="0.015"/></geometry></collision>
+  </link>
+  <joint name="FL_foot_fixed" type="fixed">
+    <parent link="FL_shin_link"/>
+    <child  link="FL_foot_link"/>
+    <origin xyz="0 0 -0.12"/>
+  </joint>
+
+  <!-- ── Front-Right (FR) ─────────────────────────────── -->
+  <link name="FR_hip_link">
+    <inertial><mass value="0.25"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/></inertial>
+    <visual><geometry><cylinder radius="0.02" length="0.04"/></geometry><material name="dark"/></visual>
+  </link>
+  <joint name="FR_HAA" type="revolute">
+    <parent link="base_link"/>
+    <child  link="FR_hip_link"/>
+    <origin xyz="0.15 -0.07 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FR_thigh_link">
+    <inertial><mass value="0.3"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="3e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.03 0.03 0.12"/></geometry><material name="blue"/></visual>
+  </link>
+  <joint name="FR_HFE" type="revolute">
+    <parent link="FR_hip_link"/>
+    <child  link="FR_thigh_link"/>
+    <origin xyz="0 -0.04 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.6" upper="1.6" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FR_shin_link">
+    <inertial><mass value="0.15"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="2e-4" iyz="0" izz="2e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.02 0.02 0.12"/></geometry><material name="blue2"/></visual>
+  </link>
+  <joint name="FR_KFE" type="revolute">
+    <parent link="FR_thigh_link"/>
+    <child  link="FR_shin_link"/>
+    <origin xyz="0 0 -0.12" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.6" upper="0.0" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="FR_foot_link">
+    <inertial><mass value="0.02"/><inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/></inertial>
+    <visual><geometry><sphere radius="0.015"/></geometry><material name="black"/></visual>
+    <collision><geometry><sphere radius="0.015"/></geometry></collision>
+  </link>
+  <joint name="FR_foot_fixed" type="fixed">
+    <parent link="FR_shin_link"/>
+    <child  link="FR_foot_link"/>
+    <origin xyz="0 0 -0.12"/>
+  </joint>
+
+  <!-- ── Rear-Left (RL) ───────────────────────────────── -->
+  <link name="RL_hip_link">
+    <inertial><mass value="0.25"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/></inertial>
+    <visual><geometry><cylinder radius="0.02" length="0.04"/></geometry><material name="dark"/></visual>
+  </link>
+  <joint name="RL_HAA" type="revolute">
+    <parent link="base_link"/>
+    <child  link="RL_hip_link"/>
+    <origin xyz="-0.15 0.07 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RL_thigh_link">
+    <inertial><mass value="0.3"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="3e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.03 0.03 0.12"/></geometry><material name="blue"/></visual>
+  </link>
+  <joint name="RL_HFE" type="revolute">
+    <parent link="RL_hip_link"/>
+    <child  link="RL_thigh_link"/>
+    <origin xyz="0 0.04 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.6" upper="1.6" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RL_shin_link">
+    <inertial><mass value="0.15"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="2e-4" iyz="0" izz="2e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.02 0.02 0.12"/></geometry><material name="blue2"/></visual>
+  </link>
+  <joint name="RL_KFE" type="revolute">
+    <parent link="RL_thigh_link"/>
+    <child  link="RL_shin_link"/>
+    <origin xyz="0 0 -0.12" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.6" upper="0.0" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RL_foot_link">
+    <inertial><mass value="0.02"/><inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/></inertial>
+    <visual><geometry><sphere radius="0.015"/></geometry><material name="black"/></visual>
+    <collision><geometry><sphere radius="0.015"/></geometry></collision>
+  </link>
+  <joint name="RL_foot_fixed" type="fixed">
+    <parent link="RL_shin_link"/>
+    <child  link="RL_foot_link"/>
+    <origin xyz="0 0 -0.12"/>
+  </joint>
+
+  <!-- ── Rear-Right (RR) ──────────────────────────────── -->
+  <link name="RR_hip_link">
+    <inertial><mass value="0.25"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/></inertial>
+    <visual><geometry><cylinder radius="0.02" length="0.04"/></geometry><material name="dark"/></visual>
+  </link>
+  <joint name="RR_HAA" type="revolute">
+    <parent link="base_link"/>
+    <child  link="RR_hip_link"/>
+    <origin xyz="-0.15 -0.07 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RR_thigh_link">
+    <inertial><mass value="0.3"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="3e-4" iyz="0" izz="3e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.03 0.03 0.12"/></geometry><material name="blue"/></visual>
+  </link>
+  <joint name="RR_HFE" type="revolute">
+    <parent link="RR_hip_link"/>
+    <child  link="RR_thigh_link"/>
+    <origin xyz="0 -0.04 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.6" upper="1.6" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RR_shin_link">
+    <inertial><mass value="0.15"/><inertia ixx="1e-4" ixy="0" ixz="0" iyy="2e-4" iyz="0" izz="2e-4"/></inertial>
+    <visual><origin xyz="0 0 -0.06"/><geometry><box size="0.02 0.02 0.12"/></geometry><material name="blue2"/></visual>
+  </link>
+  <joint name="RR_KFE" type="revolute">
+    <parent link="RR_thigh_link"/>
+    <child  link="RR_shin_link"/>
+    <origin xyz="0 0 -0.12" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.6" upper="0.0" effort="15" velocity="10"/>
+  </joint>
+
+  <link name="RR_foot_link">
+    <inertial><mass value="0.02"/><inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/></inertial>
+    <visual><geometry><sphere radius="0.015"/></geometry><material name="black"/></visual>
+    <collision><geometry><sphere radius="0.015"/></geometry></collision>
+  </link>
+  <joint name="RR_foot_fixed" type="fixed">
+    <parent link="RR_shin_link"/>
+    <child  link="RR_foot_link"/>
+    <origin xyz="0 0 -0.12"/>
+  </joint>
+
+</robot>

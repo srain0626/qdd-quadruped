@@ -13,4 +13,10 @@ ament_target_dependencies(motor_bridge_node
 install(TARGETS motor_bridge_node
     DESTINATION lib/${PROJECT_NAME})
 
+if(BUILD_TESTING)
+    find_package(ament_cmake_gtest REQUIRED)
+    ament_add_gtest(test_motor_bridge test/test_motor_bridge.cpp)
+    ament_target_dependencies(test_motor_bridge rclcpp sensor_msgs)
+endif()
+
 ament_package()
